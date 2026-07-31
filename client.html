@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Funerária Jardins</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { colors: {
+    creme: "#F5F0E8", floresta: "#1B4332", dourado: "#B8960C"
+  }}}}</script>
+  <style>
+    .tab-btn.active { background:#1B4332; color:#fff; }
+    .tab-btn       { background:#e5e7eb; color:#374151; }
+    .badge-ativo          { background:#d1fae5; color:#065f46; }
+    .badge-inadimplente   { background:#fee2e2; color:#991b1b; }
+    .badge-inativo        { background:#e5e7eb; color:#374151; }
+    .badge-bronze         { background:#fef3c7; color:#92400e; }
+    .badge-prata          { background:#e0e7ff; color:#3730a3; }
+    .badge-ouro           { background:#fef9c3; color:#854d0e; }
+    .badge-diamante       { background:#ede9fe; color:#4c1d95; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- Cabeçalho -->
+<header class="bg-floresta text-white px-6 py-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <span class="text-2xl">⚘</span>
+    <div>
+      <h1 class="font-bold text-lg leading-tight">Funerária Jardins</h1>
+      <p class="text-green-200 text-xs">Painel Administrativo</p>
+    </div>
+  </div>
+  <a href="/" class="text-green-200 hover:text-white text-sm">← Início</a>
+</header>
+
+<!-- Navegação por abas -->
+<nav class="bg-white border-b flex gap-2 px-6 py-3">
+  <button class="tab-btn active px-4 py-2 rounded-lg text-sm font-medium transition" onclick="mostrarAba('dashboard')">Dashboard</button>
+  <button class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition" onclick="mostrarAba('associados')">Associados</button>
+  <button class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition" onclick="mostrarAba('inadimplentes')">Inadimplentes</button>
+</nav>
+
+<main class="max-w-6xl mx-auto px-4 py-6">
+
+  <!-- ======== ABA DASHBOARD ======== -->
+  <section id="aba-dashboard">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Resumo Geral</h2>
+    <div id="cards-resumo" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-xl p-5 shadow-sm border col-span-2 md:col-span-3 text-center text-gray-400">Carregando...</div>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+      <h3 class="font-semibold text-gray-700 mb-3">Distribuição por Plano</h3>
+      <div id="tabela-planos" class="text-gray-400">Carregando...</div>
+    </div>
+  </section>
+
+  <!-- ======== ABA ASSOCIADOS ======== -->
+  <section id="aba-associados" class="hidden">
+    <div class="flex flex-col sm:flex-row gap-3 mb-5">
+      <input id="busca" type="text" placeholder="Buscar por nome..." class="border rounded-lg px-3 py-2 flex-1 text-sm" oninput="carregarAssociados()" />
+      <select id="filtroStatus" class="border rounded-lg px-3 py-2 text-sm" onchange="carregarAssociados()">
+        <option value="">Todos os status</option>
+        <option value="Ativo">Ativo</option>
+        <option value="Inadimplente">Inadimplente</option>
+        <option value="Inativo">Inativo</option>
+      </select>
+      <select id="filtroPlano" class="border rounded-lg px-3 py-2 text-sm" onchange="carregarAssociados()">
+        <option value="">Todos os planos</option>
+        <option value="BRONZE">Bronze</option>
+        <option value="PRATA">Prata</option>
+        <option value="OURO">Ouro</option>
+        <option value="DIAMANTE">Diamante</option>
+      </select>
+      <button onclick="abrirModalNovoAssociado()" class="bg-floresta text-white px-4 py-2 rounded-lg text-sm font-medium">+ Novo Associado</button>
+    </div>
+    <div id="lista-associados" class="space-y-3"></div>
+  </section>
+
+  <!-- ======== DETALHE DO ASSOCIADO ======== -->
+  <section id="aba-detalhe" class="hidden">
+    <button onclick="voltarParaLista()" class="mb-4 text-floresta text-sm font-medium flex items-center gap-1">← Voltar para lista</button>
+    <div id="detalhe-associado"></div>
+  </section>
+
+  <!-- ======== ABA INADIMPLENTES ======== -->
+  <section id="aba-inadimplentes" class="hidden">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Associados Inadimplentes</h2>
+    <div id="lista-inadimplentes" class="space-y-3"></div>
+  </section>
+
+</main>
+
+<!-- ======== MODAL: NOVO / EDITAR ASSOCIADO ======== -->
+<div id="modal-associado" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 hidden z-50">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between p-5 border-b">
+      <h3 id="modal-titulo" class="font-bold text-gray-800">Novo Associado</h3>
+      <button onclick="fecharModal('modal-associado')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div>
+    <form id="form-associado" class="p-5 space-y-4" onsubmit="salvarAssociado(event)">
+      <input type="hidden" id="assoc-id" />
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo *</label>
+        <input id="assoc-nome" type="text" required class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">CPF *</label>
+        <input id="assoc-cpf" type="text" required maxlength="14" placeholder="000.000.000-00" class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select id="assoc-status" class="border rounded-lg px-3 py-2 w-full text-sm">
+            <option value="Ativo">Ativo</option>
+            <option value="Inadimplente">Inadimplente</option>
+            <option value="Inativo">Inativo</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Plano</label>
+          <select id="assoc-plano" class="border rounded-lg px-3 py-2 w-full text-sm">
+            <option value="BRONZE">Bronze — R$30</option>
+            <option value="PRATA">Prata — R$40</option>
+            <option value="OURO">Ouro — R$50</option>
+            <option value="DIAMANTE">Diamante — R$100</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+        <input id="assoc-telefone" type="text" class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+        <input id="assoc-email" type="email" class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
+        <input id="assoc-endereco" type="text" class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="fecharModal('modal-associado')" class="flex-1 border rounded-lg py-2 text-sm font-medium text-gray-600">Cancelar</button>
+        <button type="submit" class="flex-1 bg-floresta text-white rounded-lg py-2 text-sm font-medium">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======== MODAL: DEPENDENTE ======== -->
+<div id="modal-dependente" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 hidden z-50">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+    <div class="flex items-center justify-between p-5 border-b">
+      <h3 id="dep-modal-titulo" class="font-bold text-gray-800">Novo Dependente</h3>
+      <button onclick="fecharModal('modal-dependente')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div>
+    <form id="form-dependente" class="p-5 space-y-4" onsubmit="salvarDependente(event)">
+      <input type="hidden" id="dep-id" />
+      <input type="hidden" id="dep-assoc-id" />
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
+        <input id="dep-nome" type="text" required class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Parentesco *</label>
+          <input id="dep-parentesco" type="text" required placeholder="Ex: Cônjuge" class="border rounded-lg px-3 py-2 w-full text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Idade *</label>
+          <input id="dep-idade" type="number" required min="0" max="120" class="border rounded-lg px-3 py-2 w-full text-sm" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Peso (kg) — uso interno</label>
+        <input id="dep-peso" type="number" step="0.1" class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="fecharModal('modal-dependente')" class="flex-1 border rounded-lg py-2 text-sm font-medium text-gray-600">Cancelar</button>
+        <button type="submit" class="flex-1 bg-floresta text-white rounded-lg py-2 text-sm font-medium">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======== MODAL: LANÇAMENTO FINANCEIRO ======== -->
+<div id="modal-lancamento" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 hidden z-50">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+    <div class="flex items-center justify-between p-5 border-b">
+      <h3 class="font-bold text-gray-800">Novo Lançamento</h3>
+      <button onclick="fecharModal('modal-lancamento')" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div>
+    <form id="form-lancamento" class="p-5 space-y-4" onsubmit="salvarLancamento(event)">
+      <input type="hidden" id="lanc-assoc-id" />
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Descrição *</label>
+        <input id="lanc-descricao" type="text" required placeholder="Ex: Mensalidade Julho/2025" class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Valor (R$) *</label>
+          <input id="lanc-valor" type="number" required step="0.01" min="0" class="border rounded-lg px-3 py-2 w-full text-sm" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tipo *</label>
+          <select id="lanc-tipo" class="border rounded-lg px-3 py-2 w-full text-sm">
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Observação</label>
+        <input id="lanc-obs" type="text" class="border rounded-lg px-3 py-2 w-full text-sm" />
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="fecharModal('modal-lancamento')" class="flex-1 border rounded-lg py-2 text-sm font-medium text-gray-600">Cancelar</button>
+        <button type="submit" class="flex-1 bg-floresta text-white rounded-lg py-2 text-sm font-medium">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// ─── Utilidades ──────────────────────────────────────────────
+const API = "";   // mesmo domínio
+let abaAtual = "dashboard";
+let assocDetalheId = null;
+
+function fmt(v) { return new Intl.NumberFormat("pt-BR", { style:"currency", currency:"BRL" }).format(v); }
+function fmtData(d) { return new Date(d).toLocaleDateString("pt-BR"); }
+
+function badge(texto, tipo) {
+  const cls = { Ativo:"badge-ativo", Inadimplente:"badge-inadimplente", Inativo:"badge-inativo",
+                BRONZE:"badge-bronze", PRATA:"badge-prata", OURO:"badge-ouro", DIAMANTE:"badge-diamante" };
+  return `<span class="px-2 py-0.5 rounded-full text-xs font-semibold ${cls[texto]||'badge-inativo'}">${texto}</span>`;
+}
+
+function mostrarAba(nome) {
+  ["dashboard","associados","detalhe","inadimplentes"].forEach(a => {
+    document.getElementById(`aba-${a}`).classList.add("hidden");
+  });
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(`aba-${nome}`).classList.remove("hidden");
+  const idx = ["dashboard","associados","inadimplentes"].indexOf(nome);
+  if (idx >= 0) document.querySelectorAll(".tab-btn")[idx].classList.add("active");
+  abaAtual = nome;
+  if (nome === "dashboard")     carregarDashboard();
+  if (nome === "associados")    carregarAssociados();
+  if (nome === "inadimplentes") carregarInadimplentes();
+}
+
+function fecharModal(id) { document.getElementById(id).classList.add("hidden"); }
+
+// ─── DASHBOARD ───────────────────────────────────────────────
+async function carregarDashboard() {
+  const r = await fetch(`${API}/api/dashboard/resumo`);
+  const d = await r.json();
+  document.getElementById("cards-resumo").innerHTML = `
+    <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500 mb-1">Total de Associados</p><p class="text-3xl font-bold text-floresta">${d.totalAssociados}</p></div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500 mb-1">Ativos</p><p class="text-3xl font-bold text-green-600">${d.totalAtivos}</p></div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500 mb-1">Inadimplentes</p><p class="text-3xl font-bold text-red-500">${d.totalInadimplentes}</p></div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border"><p class="text-xs text-gray-500 mb-1">Dependentes</p><p class="text-3xl font-bold text-gray-700">${d.totalDependentes}</p></div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border col-span-2"><p class="text-xs text-gray-500 mb-1">Receita Mensal Estimada</p><p class="text-3xl font-bold text-dourado">${fmt(d.receitaMensalEstimada)}</p></div>
+  `;
+  document.getElementById("tabela-planos").innerHTML = `
+    <table class="w-full text-sm"><thead><tr class="text-left text-gray-500 text-xs border-b"><th class="pb-2">Plano</th><th class="pb-2">Associados</th><th class="pb-2">Mensalidade</th></tr></thead>
+    <tbody>${d.porPlano.map(p => {
+      const val = {BRONZE:30,PRATA:40,OURO:50,DIAMANTE:100}[p.plano]||0;
+      return `<tr class="border-b last:border-0"><td class="py-2">${badge(p.plano,"")}</td><td class="py-2 font-semibold">${p.quantidade}</td><td class="py-2">${fmt(val)}</td></tr>`;
+    }).join("")}</tbody></table>
+  `;
+}
+
+// ─── ASSOCIADOS ──────────────────────────────────────────────
+async function carregarAssociados() {
+  const busca  = document.getElementById("busca")?.value || "";
+  const status = document.getElementById("filtroStatus")?.value || "";
+  const plano  = document.getElementById("filtroPlano")?.value || "";
+  const params = new URLSearchParams();
+  if (busca)  params.set("busca", busca);
+  if (status) params.set("status", status);
+  if (plano)  params.set("plano", plano);
+  const r    = await fetch(`${API}/api/associados?${params}`);
+  const list = await r.json();
+  const el   = document.getElementById("lista-associados");
+  if (!list.length) { el.innerHTML = `<p class="text-gray-400 text-center py-8">Nenhum associado encontrado.</p>`; return; }
+  el.innerHTML = list.map(a => `
+    <div class="bg-white rounded-xl p-4 shadow-sm border flex items-center justify-between gap-3 cursor-pointer hover:shadow-md transition" onclick="abrirDetalhe(${a.id})">
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-gray-800 truncate">${a.nome}</p>
+        <p class="text-xs text-gray-400">CPF: ${formatarCpf(a.cpf)} · ${a.dependentes?.length||0} dependente(s)</p>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        ${badge(a.plano,"")} ${badge(a.status,"")}
+      </div>
+    </div>
+  `).join("");
+}
+
+function formatarCpf(cpf) {
+  const c = cpf.replace(/\D/g,"");
+  return c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+}
+
+// ─── DETALHE DO ASSOCIADO ─────────────────────────────────────
+async function abrirDetalhe(id) {
+  assocDetalheId = id;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  ["dashboard","associados","inadimplentes"].forEach(a => document.getElementById(`aba-${a}`).classList.add("hidden"));
+  document.getElementById("aba-detalhe").classList.remove("hidden");
+  abaAtual = "detalhe";
+  await renderizarDetalhe(id);
+}
+
+async function renderizarDetalhe(id) {
+  const [rA, rF] = await Promise.all([
+    fetch(`${API}/api/associados/${id}`),
+    fetch(`${API}/api/associados/${id}/financeiro`)
+  ]);
+  const a    = await rA.json();
+  const fins = await rF.json();
+
+  document.getElementById("detalhe-associado").innerHTML = `
+    <!-- Cabeçalho -->
+    <div class="bg-white rounded-xl p-5 shadow-sm border mb-4">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">${a.nome}</h2>
+          <p class="text-sm text-gray-400">CPF: ${formatarCpf(a.cpf)}</p>
+        </div>
+        <div class="flex gap-2">${badge(a.plano,"")} ${badge(a.status,"")}</div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-gray-600">
+        ${a.telefone ? `<p>📞 ${a.telefone}</p>` : ""}
+        ${a.email    ? `<p>✉️ ${a.email}</p>`    : ""}
+        ${a.endereco ? `<p>📍 ${a.endereco}</p>` : ""}
+      </div>
+      <div class="flex gap-2 mt-4">
+        <button onclick="abrirModalEditarAssociado(${a.id})" class="px-4 py-2 text-sm border rounded-lg text-floresta font-medium hover:bg-floresta hover:text-white transition">Editar</button>
+        <button onclick="excluirAssociado(${a.id})" class="px-4 py-2 text-sm border border-red-300 rounded-lg text-red-600 font-medium hover:bg-red-50 transition">Excluir</button>
+      </div>
+    </div>
+
+    <!-- Dependentes -->
+    <div class="bg-white rounded-xl p-5 shadow-sm border mb-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold text-gray-700">Dependentes (${a.dependentes?.length||0}/6)</h3>
+        ${(a.dependentes?.length||0) < 6
+          ? `<button onclick="abrirModalNovoDependente(${a.id})" class="text-sm text-floresta font-medium">+ Adicionar</button>`
+          : ""}
+      </div>
+      ${(a.dependentes?.length||0) === 0
+        ? `<p class="text-gray-400 text-sm">Nenhum dependente cadastrado.</p>`
+        : `<div class="space-y-2">${a.dependentes.map(d => `
+          <div class="flex items-center justify-between py-2 border-b last:border-0">
+            <div>
+              <p class="text-sm font-medium text-gray-700">${d.nome} <span class="text-xs text-gray-400">— ${d.parentesco}</span></p>
+              <p class="text-xs text-gray-400">${d.idade} anos${d.peso ? ` · ${d.peso} kg` : ""}</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="abrirModalEditarDependente(${a.id},${d.id},'${escapeJs(d.nome)}','${escapeJs(d.parentesco)}',${d.idade},${d.peso||0})" class="text-xs text-floresta">Editar</button>
+              <button onclick="excluirDependente(${a.id},${d.id})" class="text-xs text-red-500">Excluir</button>
+            </div>
+          </div>
+        `).join("")}</div>`
+      }
+    </div>
+
+    <!-- Financeiro -->
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold text-gray-700">Histórico Financeiro</h3>
+        <button onclick="abrirModalLancamento(${a.id})" class="text-sm text-floresta font-medium">+ Lançamento</button>
+      </div>
+      ${fins.length === 0
+        ? `<p class="text-gray-400 text-sm">Nenhum lançamento registrado.</p>`
+        : `<div class="space-y-2">${fins.map(f => `
+          <div class="flex items-center justify-between py-2 border-b last:border-0">
+            <div>
+              <p class="text-sm font-medium text-gray-700">${f.descricao}</p>
+              <p class="text-xs text-gray-400">${fmtData(f.data)} ${f.observacao ? "· "+f.observacao : ""}</p>
+            </div>
+            <span class="text-sm font-semibold ${f.tipo==='entrada'?'text-green-600':'text-red-500'}">${f.tipo==='entrada'?'+':'-'}${fmt(f.valor)}</span>
+          </div>
+        `).join("")}</div>`
+      }
+    </div>
+  `;
+}
+
+function escapeJs(str) { return String(str).replace(/'/g,"\\'"); }
+
+function voltarParaLista() {
+  document.getElementById("aba-detalhe").classList.add("hidden");
+  document.getElementById("aba-associados").classList.remove("hidden");
+  document.querySelectorAll(".tab-btn")[1].classList.add("active");
+  abaAtual = "associados";
+  carregarAssociados();
+}
+
+// ─── INADIMPLENTES ────────────────────────────────────────────
+async function carregarInadimplentes() {
+  const r    = await fetch(`${API}/api/dashboard/inadimplentes`);
+  const list = await r.json();
+  const el   = document.getElementById("lista-inadimplentes");
+  if (!list.length) { el.innerHTML = `<p class="text-green-600 text-center py-8 font-medium">✓ Nenhum inadimplente!</p>`; return; }
+  el.innerHTML = list.map(a => `
+    <div class="bg-white rounded-xl p-4 shadow-sm border flex items-center justify-between gap-3 cursor-pointer hover:shadow-md transition" onclick="abrirDetalhe(${a.id})">
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-gray-800 truncate">${a.nome}</p>
+        <p class="text-xs text-gray-400">CPF: ${formatarCpf(a.cpf)} · ${a.dependentes?.length||0} dependente(s)</p>
+      </div>
+      ${badge(a.plano,"")}
+    </div>
+  `).join("");
+}
+
+// ─── MODAIS — ASSOCIADO ───────────────────────────────────────
+function abrirModalNovoAssociado() {
+  document.getElementById("modal-titulo").textContent = "Novo Associado";
+  document.getElementById("assoc-id").value      = "";
+  document.getElementById("assoc-nome").value    = "";
+  document.getElementById("assoc-cpf").value     = "";
+  document.getElementById("assoc-status").value  = "Ativo";
+  document.getElementById("assoc-plano").value   = "BRONZE";
+  document.getElementById("assoc-telefone").value= "";
+  document.getElementById("assoc-email").value   = "";
+  document.getElementById("assoc-endereco").value= "";
+  document.getElementById("modal-associado").classList.remove("hidden");
+}
+
+async function abrirModalEditarAssociado(id) {
+  const r = await fetch(`${API}/api/associados/${id}`);
+  const a = await r.json();
+  document.getElementById("modal-titulo").textContent = "Editar Associado";
+  document.getElementById("assoc-id").value      = a.id;
+  document.getElementById("assoc-nome").value    = a.nome;
+  document.getElementById("assoc-cpf").value     = formatarCpf(a.cpf);
+  document.getElementById("assoc-status").value  = a.status;
+  document.getElementById("assoc-plano").value   = a.plano;
+  document.getElementById("assoc-telefone").value= a.telefone||"";
+  document.getElementById("assoc-email").value   = a.email||"";
+  document.getElementById("assoc-endereco").value= a.endereco||"";
+  document.getElementById("modal-associado").classList.remove("hidden");
+}
+
+async function salvarAssociado(e) {
+  e.preventDefault();
+  const id   = document.getElementById("assoc-id").value;
+  const body = {
+    nome:     document.getElementById("assoc-nome").value,
+    cpf:      document.getElementById("assoc-cpf").value,
+    status:   document.getElementById("assoc-status").value,
+    plano:    document.getElementById("assoc-plano").value,
+    telefone: document.getElementById("assoc-telefone").value,
+    email:    document.getElementById("assoc-email").value,
+    endereco: document.getElementById("assoc-endereco").value,
+  };
+  const url    = id ? `${API}/api/associados/${id}` : `${API}/api/associados`;
+  const method = id ? "PATCH" : "POST";
+  const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json(); alert("Erro: " + e.error); return; }
+  fecharModal("modal-associado");
+  if (id) { renderizarDetalhe(id); } else { mostrarAba("associados"); }
+}
+
+async function excluirAssociado(id) {
+  if (!confirm("Excluir este associado e todos os seus dados?")) return;
+  await fetch(`${API}/api/associados/${id}`, { method: "DELETE" });
+  voltarParaLista();
+}
+
+// ─── MODAIS — DEPENDENTE ──────────────────────────────────────
+function abrirModalNovoDependente(assocId) {
+  document.getElementById("dep-modal-titulo").textContent = "Novo Dependente";
+  document.getElementById("dep-id").value       = "";
+  document.getElementById("dep-assoc-id").value = assocId;
+  document.getElementById("dep-nome").value      = "";
+  document.getElementById("dep-parentesco").value= "";
+  document.getElementById("dep-idade").value     = "";
+  document.getElementById("dep-peso").value      = "";
+  document.getElementById("modal-dependente").classList.remove("hidden");
+}
+
+function abrirModalEditarDependente(assocId, depId, nome, parentesco, idade, peso) {
+  document.getElementById("dep-modal-titulo").textContent = "Editar Dependente";
+  document.getElementById("dep-id").value       = depId;
+  document.getElementById("dep-assoc-id").value = assocId;
+  document.getElementById("dep-nome").value      = nome;
+  document.getElementById("dep-parentesco").value= parentesco;
+  document.getElementById("dep-idade").value     = idade;
+  document.getElementById("dep-peso").value      = peso||"";
+  document.getElementById("modal-dependente").classList.remove("hidden");
+}
+
+async function salvarDependente(e) {
+  e.preventDefault();
+  const depId   = document.getElementById("dep-id").value;
+  const assocId = document.getElementById("dep-assoc-id").value;
+  const body = {
+    nome:       document.getElementById("dep-nome").value,
+    parentesco: document.getElementById("dep-parentesco").value,
+    idade:      Number(document.getElementById("dep-idade").value),
+    peso:       document.getElementById("dep-peso").value ? Number(document.getElementById("dep-peso").value) : undefined,
+  };
+  const url    = depId ? `${API}/api/associados/${assocId}/dependentes/${depId}` : `${API}/api/associados/${assocId}/dependentes`;
+  const method = depId ? "PATCH" : "POST";
+  const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json(); alert("Erro: " + e.error); return; }
+  fecharModal("modal-dependente");
+  renderizarDetalhe(assocId);
+}
+
+async function excluirDependente(assocId, depId) {
+  if (!confirm("Excluir este dependente?")) return;
+  await fetch(`${API}/api/associados/${assocId}/dependentes/${depId}`, { method: "DELETE" });
+  renderizarDetalhe(assocId);
+}
+
+// ─── MODAIS — FINANCEIRO ──────────────────────────────────────
+function abrirModalLancamento(assocId) {
+  document.getElementById("lanc-assoc-id").value  = assocId;
+  document.getElementById("lanc-descricao").value = "";
+  document.getElementById("lanc-valor").value     = "";
+  document.getElementById("lanc-tipo").value      = "entrada";
+  document.getElementById("lanc-obs").value       = "";
+  document.getElementById("modal-lancamento").classList.remove("hidden");
+}
+
+async function salvarLancamento(e) {
+  e.preventDefault();
+  const assocId = document.getElementById("lanc-assoc-id").value;
+  const body = {
+    descricao:  document.getElementById("lanc-descricao").value,
+    valor:      Number(document.getElementById("lanc-valor").value),
+    tipo:       document.getElementById("lanc-tipo").value,
+    observacao: document.getElementById("lanc-obs").value || undefined,
+  };
+  const r = await fetch(`${API}/api/associados/${assocId}/financeiro`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); alert("Erro: " + e.error); return; }
+  fecharModal("modal-lancamento");
+  renderizarDetalhe(assocId);
+}
+
+// ─── Inicialização ────────────────────────────────────────────
+carregarDashboard();
+</script>
+</body>
+</html>

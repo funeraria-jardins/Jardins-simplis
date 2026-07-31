@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Funerária Jardins — Associado</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1B4332" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { colors: {
+    creme: "#F5F0E8", floresta: "#1B4332", dourado: "#B8960C"
+  }}}}</script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .tab-btn.active { border-bottom: 2px solid #1B4332; color: #1B4332; font-weight:600; }
+    .tab-btn { border-bottom: 2px solid transparent; color: #6b7280; }
+  </style>
+</head>
+<body class="bg-creme min-h-screen flex flex-col">
+
+<!-- ======== TELA DE LOGIN ======== -->
+<div id="tela-login" class="flex-1 flex flex-col items-center justify-center p-8 gap-6">
+  <div class="text-center">
+    <div class="text-5xl mb-3">⚘</div>
+    <h1 class="text-2xl font-bold text-floresta">Funerária Jardins</h1>
+    <p class="text-gray-500 text-sm mt-1">Área do Associado</p>
+  </div>
+  <div class="w-full max-w-sm bg-white rounded-2xl shadow p-6 space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Digite seu CPF</label>
+      <input id="cpf-input" type="text" maxlength="14" placeholder="000.000.000-00"
+             class="w-full border rounded-xl px-4 py-3 text-center text-xl tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-floresta"
+             oninput="mascararCpf(this)" onkeydown="if(event.key==='Enter') fazerLogin()" />
+    </div>
+    <p id="login-erro" class="text-red-500 text-sm hidden text-center"></p>
+    <button onclick="fazerLogin()" class="w-full bg-floresta text-white py-3 rounded-xl font-semibold text-base">Entrar</button>
+  </div>
+</div>
+
+<!-- ======== APP PRINCIPAL ======== -->
+<div id="app-principal" class="hidden flex-1 flex flex-col max-w-md mx-auto w-full">
+
+  <!-- Cabeçalho -->
+  <header class="bg-floresta text-white px-5 pt-6 pb-4">
+    <div class="flex items-center justify-between mb-1">
+      <p class="text-green-200 text-xs">Bem-vindo(a)</p>
+      <button onclick="sair()" class="text-green-200 text-xs hover:text-white">Sair</button>
+    </div>
+    <h2 id="nome-associado" class="font-bold text-lg leading-tight"></h2>
+    <div class="flex items-center gap-2 mt-1">
+      <span id="badge-plano" class="text-xs px-2 py-0.5 bg-white/20 rounded-full"></span>
+      <span id="badge-status" class="text-xs px-2 py-0.5 bg-white/20 rounded-full"></span>
+    </div>
+  </header>
+
+  <!-- Abas -->
+  <nav class="bg-white border-b flex">
+    <button class="tab-btn active flex-1 py-3 text-sm" onclick="mostrarAba('financeiro')">💳 Financeiro</button>
+    <button class="tab-btn flex-1 py-3 text-sm" onclick="mostrarAba('plano')">📋 Meu Plano</button>
+    <button class="tab-btn flex-1 py-3 text-sm" onclick="mostrarAba('suporte')">📞 Suporte</button>
+  </nav>
+
+  <!-- Conteúdo das abas -->
+  <div class="flex-1 overflow-y-auto">
+
+    <!-- ── ABA FINANCEIRO ── -->
+    <section id="aba-financeiro" class="p-4 space-y-4">
+
+      <!-- Status e PIX -->
+      <div id="card-pix" class="bg-white rounded-2xl p-5 shadow-sm border"></div>
+
+      <!-- Histórico -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border">
+        <h3 class="font-semibold text-gray-700 mb-3">Histórico</h3>
+        <div id="historico-financeiro" class="space-y-2 text-sm text-gray-400">Carregando...</div>
+      </div>
+
+    </section>
+
+    <!-- ── ABA MEU PLANO ── -->
+    <section id="aba-plano" class="hidden p-4 space-y-4">
+      <div id="card-plano-info" class="bg-white rounded-2xl p-5 shadow-sm border"></div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm border">
+        <h3 class="font-semibold text-gray-700 mb-3">Seus Dependentes</h3>
+        <div id="lista-dependentes" class="space-y-2 text-sm text-gray-400">Carregando...</div>
+      </div>
+    </section>
+
+    <!-- ── ABA SUPORTE ── -->
+    <section id="aba-suporte" class="hidden p-4 space-y-3">
+
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-1">Emergência 24h</h3>
+      <a href="tel:0800-000-0000" class="block bg-red-50 border border-red-200 rounded-xl p-4">
+        <p class="font-bold text-red-700">🚨 Central 24 horas</p>
+        <p class="text-sm text-red-600">0800 000 0000</p>
+      </a>
+
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-2">Atendimento</h3>
+      <a href="tel:(95) 3000-0000" class="block bg-white border rounded-xl p-4">
+        <p class="font-semibold text-gray-800">📞 Sede</p>
+        <p class="text-sm text-gray-500">(95) 3000-0000</p>
+      </a>
+      <a href="https://wa.me/559599999999" target="_blank" class="block bg-white border rounded-xl p-4">
+        <p class="font-semibold text-gray-800">💬 WhatsApp</p>
+        <p class="text-sm text-gray-500">(95) 9 9999-9999</p>
+      </a>
+      <div class="block bg-white border rounded-xl p-4 cursor-pointer" onclick="abrirMapa()">
+        <p class="font-semibold text-gray-800">📍 Nossa Sede</p>
+        <p class="text-sm text-gray-500">Av. Mário Homem de Melo, 2116 — Mecejana, Boa Vista/RR</p>
+        <p class="text-xs text-floresta mt-1 font-medium">Toque para abrir no mapa</p>
+      </div>
+
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-2">Horário de Atendimento</h3>
+      <div class="bg-white border rounded-xl p-4 text-sm text-gray-600 space-y-1">
+        <p>🕐 Seg–Sex: 08h às 18h</p>
+        <p>🕐 Sábados: 08h às 12h</p>
+        <p>🕐 Emergências: 24 horas</p>
+      </div>
+
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-2">Farmácias Parceiras</h3>
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-white border rounded-xl p-3 text-center">
+          <img src="/parceiros/pague-menos.png" alt="Pague Menos" class="w-full h-12 object-contain" onerror="this.parentNode.innerHTML='<p class=text-xs text-gray-500>Pague Menos</p>'" />
+        </div>
+        <div class="bg-white border rounded-xl p-3 text-center">
+          <img src="/parceiros/farmacia-popular.png" alt="Farmácia Popular" class="w-full h-12 object-contain" onerror="this.parentNode.innerHTML='<p class=text-xs text-gray-500>Farm. Popular</p>'" />
+        </div>
+        <div class="bg-white border rounded-xl p-3 text-center">
+          <img src="/parceiros/santo-remedio.png" alt="Santo Remédio" class="w-full h-12 object-contain" onerror="this.parentNode.innerHTML='<p class=text-xs text-gray-500>Santo Remédio</p>'" />
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+</div>
+
+<script>
+// ─── Estado ──────────────────────────────────────────────────
+const API = "";
+let associado = null;
+
+// ─── Login ───────────────────────────────────────────────────
+function mascararCpf(input) {
+  let v = input.value.replace(/\D/g,"");
+  if (v.length > 11) v = v.slice(0,11);
+  v = v.replace(/(\d{3})(\d)/, "$1.$2")
+       .replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+       .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+  input.value = v;
+}
+
+function limparCpf(cpf) { return cpf.replace(/\D/g,""); }
+
+async function fazerLogin() {
+  const cpf = limparCpf(document.getElementById("cpf-input").value);
+  if (cpf.length !== 11) { mostrarErroLogin("Digite um CPF válido."); return; }
+  const r = await fetch(`${API}/api/cliente/${cpf}`);
+  if (!r.ok) { mostrarErroLogin("CPF não encontrado. Verifique e tente novamente."); return; }
+  associado = await r.json();
+  localStorage.setItem("assoc", JSON.stringify(associado));
+  iniciarApp();
+}
+
+function mostrarErroLogin(msg) {
+  const el = document.getElementById("login-erro");
+  el.textContent = msg;
+  el.classList.remove("hidden");
+}
+
+function sair() {
+  localStorage.removeItem("assoc");
+  associado = null;
+  document.getElementById("app-principal").classList.add("hidden");
+  document.getElementById("tela-login").classList.remove("hidden");
+  document.getElementById("cpf-input").value = "";
+  document.getElementById("login-erro").classList.add("hidden");
+}
+
+function iniciarApp() {
+  document.getElementById("tela-login").classList.add("hidden");
+  document.getElementById("app-principal").classList.remove("hidden");
+  document.getElementById("nome-associado").textContent = associado.nome;
+  document.getElementById("badge-plano").textContent   = associado.plano;
+  document.getElementById("badge-status").textContent  = associado.status;
+  renderizarFinanceiro();
+}
+
+// ─── Abas ────────────────────────────────────────────────────
+function mostrarAba(nome) {
+  ["financeiro","plano","suporte"].forEach(a => document.getElementById(`aba-${a}`).classList.add("hidden"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(`aba-${nome}`).classList.remove("hidden");
+  const idx = ["financeiro","plano","suporte"].indexOf(nome);
+  document.querySelectorAll(".tab-btn")[idx].classList.add("active");
+  if (nome === "financeiro") renderizarFinanceiro();
+  if (nome === "plano")      renderizarPlano();
+}
+
+// ─── Financeiro ───────────────────────────────────────────────
+function gerarPix(plano) {
+  const valores = { BRONZE: "30.00", PRATA: "40.00", OURO: "50.00", DIAMANTE: "100.00" };
+  const valor   = valores[plano] || "30.00";
+  const cnpj    = "66585418000116".replace(/\D/g,"");
+  const nome    = "FUNERARIA JARDINS LTDA";
+  const cidade  = "BOA VISTA";
+  const txid    = "MENSALIDADE" + Date.now();
+
+  function pad(tag, val) {
+    const v = String(val);
+    return tag + String(v.length).padStart(2,"0") + v;
+  }
+  const gui    = "BR.GOV.BCB.PIX";
+  const key    = cnpj;
+  const info   = pad("01", key) + pad("02", "Mensalidade Funeraria");
+  const merchant = pad("00", gui) + pad("26", info);
+  const payload = "000201" + pad("26", merchant) + "52040000" + "5303986" + pad("54", valor) +
+                  "5802BR" + pad("59", nome) + pad("60", cidade) + pad("62", pad("05", txid)) + "6304";
+  let s=0; for (const c of payload) s = ((s << 4 ^ c.charCodeAt(0) << 8 ^ s >> 4 ^ c.charCodeAt(0)) & 0xFFFF);
+  return payload + s.toString(16).toUpperCase().padStart(4,"0");
+}
+
+async function renderizarFinanceiro() {
+  const estaEmDia = associado.status === "Ativo";
+  const valorPorPlano = { BRONZE: 30, PRATA: 40, OURO: 50, DIAMANTE: 100 };
+  const valor = valorPorPlano[associado.plano] || 30;
+  const pix   = gerarPix(associado.plano);
+
+  document.getElementById("card-pix").innerHTML = estaEmDia
+    ? `<div class="flex items-center gap-3 mb-4">
+         <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl">✓</div>
+         <div><p class="font-bold text-green-700">Pagamento em dia</p><p class="text-xs text-gray-400">Plano ${associado.plano} — R$${valor},00/mês</p></div>
+       </div>
+       <div class="bg-gray-50 rounded-xl p-4 border">
+         <p class="text-xs text-gray-500 mb-2 font-medium">PIX Copia e Cola (próxima mensalidade)</p>
+         <p class="text-xs font-mono break-all text-gray-600 bg-white border rounded p-2 select-all" id="pix-code">${pix}</p>
+         <button onclick="copiarPix()" class="mt-2 w-full text-center text-sm text-floresta font-medium py-2 bg-white border rounded-lg">📋 Copiar código PIX</button>
+       </div>`
+    : `<div class="flex items-center gap-3">
+         <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-xl">⚠</div>
+         <div>
+           <p class="font-bold text-red-700">Mensalidade em atraso</p>
+           <p class="text-xs text-gray-400">Entre em contato para regularizar</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 rounded-xl p-4 border mt-4">
+         <p class="text-xs text-gray-500 mb-2 font-medium">PIX para regularização</p>
+         <p class="text-xs font-mono break-all text-gray-600 bg-white border rounded p-2 select-all" id="pix-code">${pix}</p>
+         <button onclick="copiarPix()" class="mt-2 w-full text-center text-sm text-floresta font-medium py-2 bg-white border rounded-lg">📋 Copiar código PIX</button>
+       </div>`;
+
+  const r = await fetch(`${API}/api/associados/${associado.id}/financeiro`);
+  const fins = await r.json();
+  const fmt  = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v);
+  const el   = document.getElementById("historico-financeiro");
+  if (!fins.length) { el.innerHTML = `<p class="text-center py-4">Nenhum lançamento.</p>`; return; }
+  el.innerHTML = fins.slice(0,10).map(f => `
+    <div class="flex justify-between items-center py-2 border-b last:border-0">
+      <div><p class="font-medium text-gray-700">${f.descricao}</p><p class="text-xs text-gray-400">${new Date(f.data).toLocaleDateString("pt-BR")}</p></div>
+      <span class="font-semibold ${f.tipo==='entrada'?'text-green-600':'text-red-500'}">${f.tipo==='entrada'?'+':'-'}${fmt(f.valor)}</span>
+    </div>`).join("");
+}
+
+function copiarPix() {
+  const txt = document.getElementById("pix-code")?.textContent || "";
+  navigator.clipboard.writeText(txt).then(() => alert("Código PIX copiado!"));
+}
+
+// ─── Plano ───────────────────────────────────────────────────
+const BENEFICIOS_PLANO = {
+  BRONZE:   { val: 30,  coberturas: ["Urna padrão", "Translado local", "Preparação", "Velório em nossa sede", "Sepultamento"] },
+  PRATA:    { val: 40,  coberturas: ["Urna premium", "Translado estadual", "Preparação completa", "Velório 24h", "Sepultamento", "Flores e coroa"] },
+  OURO:     { val: 50,  coberturas: ["Urna de luxo", "Translado nacional", "Preparação VIP", "Velório em casa ou sede", "Sepultamento ou cremação", "Flores, coroa e missa"] },
+  DIAMANTE: { val: 100, coberturas: ["Urna premium especial", "Translado internacional", "Preparação VIP + tanatopraxia", "Velório em qualquer local", "Sepultamento ou cremação", "Flores, coroa, missa e café"] },
+};
+
+function renderizarPlano() {
+  const p   = BENEFICIOS_PLANO[associado.plano] || BENEFICIOS_PLANO.BRONZE;
+  const fmt = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v);
+
+  document.getElementById("card-plano-info").innerHTML = `
+    <div class="flex items-center justify-between mb-4">
+      <div><h3 class="font-bold text-xl text-floresta">Plano ${associado.plano}</h3><p class="text-sm text-gray-400">${fmt(p.val)}/mês</p></div>
+    </div>
+    <h4 class="text-sm font-semibold text-gray-600 mb-2">Coberturas incluídas:</h4>
+    <ul class="space-y-1">${p.coberturas.map(c => `<li class="text-sm text-gray-700 flex gap-2"><span class="text-floresta">✓</span> ${c}</li>`).join("")}</ul>
+  `;
+
+  const deps = associado.dependentes || [];
+  const el   = document.getElementById("lista-dependentes");
+  if (!deps.length) { el.innerHTML = `<p class="text-center py-4">Nenhum dependente cadastrado.</p>`; return; }
+  el.innerHTML = deps.map(d => `
+    <div class="flex items-center gap-3 py-2 border-b last:border-0">
+      <div class="w-8 h-8 bg-floresta/10 rounded-full flex items-center justify-center text-floresta font-bold text-sm">${d.nome[0]}</div>
+      <div><p class="font-medium text-gray-700">${d.nome}</p><p class="text-xs text-gray-400">${d.parentesco} · ${d.idade} anos</p></div>
+    </div>`).join("");
+}
+
+// ─── Suporte ─────────────────────────────────────────────────
+function abrirMapa() {
+  const q = "Avenida+M%C3%A1rio+Homem+de+Melo,2116,Mecejana,Roraima,Brasil";
+  const ua = navigator.userAgent.toLowerCase();
+  if (/iphone|ipad|ipod/.test(ua)) {
+    window.location.href = `maps://maps.apple.com/?q=${q}`;
+  } else {
+    window.location.href = `geo:2.8329,-60.6714?q=${q}`;
+  }
+}
+
+// ─── Inicialização ─────────────────────────────────────────────
+const saved = localStorage.getItem("assoc");
+if (saved) {
+  try {
+    associado = JSON.parse(saved);
+    iniciarApp();
+  } catch { localStorage.removeItem("assoc"); }
+}
+</script>
+</body>
+</html>
