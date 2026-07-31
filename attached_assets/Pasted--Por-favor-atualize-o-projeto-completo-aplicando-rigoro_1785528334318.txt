@@ -1,0 +1,35 @@
+"Por favor, atualize o projeto completo aplicando rigorosamente as seguintes especificações e correções:
+
+Separação de Rotas e Segurança (Links Diferentes):
+
+Separe completamente os acessos. O painel administrativo deve ficar em uma rota restrita e segura (ex: /adm), enquanto a área do associado fica em outra rota (ex: /client ou /associado), impedindo que o cliente comum acesse a gestão.
+
+Identidade Visual, Cores e Logotipo:
+
+Use estritamente a paleta de cores: Verde escuro (principal), Branco (fundos/cards) e Dourado (detalhes, bordas, títulos e botões). Zero tons de bronze.
+
+Insira o logotipo oficial (a arte da árvore com moldura circular dourada e fundo verde) no topo das telas principais de login, painel do associado e painel administrativo.
+
+Aba 1 - Tela Inicial (Financeiro):
+
+Alinhe o visual com o card de pagamento: exiba o status, o valor mensal, o QR Code de pagamento via PIX, a chave PIX (CNPJ: 66585418000116), o botão destacado em dourado 'Copiar Código PIX', o campo com o Dia do Próximo Vencimento e a seção de Histórico de Pagamentos.
+
+Aba 2 - Meu Plano:
+
+Exiba o nome do Titular, o tipo do plano (Bronze, Prata, Ouro ou Diamante), o prazo de carência e liste as coberturas/benefícios específicos daquele plano de forma limpa.
+
+Mantenha na parte inferior a seção de Dependentes com o contador de vagas.
+
+Aba 3 - Suporte / Contato (100% Interativo):
+
+No card de Plantão 24 Horas, o botão 'LIGAR AGORA' deve abrir o discador do celular ligando para (95) 99176-7140.
+
+O botão de WhatsApp deve abrir diretamente a conversa com o número (95) 99176-7140.
+
+O botão do mapa / "Nossa Sede" deve abrir a localização exata da funerária (Av. Mário Homem de Melo, 2116 — Mecejana, Boa Vista/RR) diretamente no navegador principal do dispositivo.
+
+Atualize todos os dados de endereço e telefones oficiais ((95) 99176-7140 e (95) 98101-2775).
+
+Atualização no GitHub:
+
+Garanta que todos esses arquivos alterados fiquem prontos e organizados para serem enviados ao repositório do GitHub, para que o Railway atualize o aplicativo em produção automaticamente."

@@ -328,7 +328,7 @@ app.get("/api/healthz", async (req, res) => {
 });
 
 // ── Qualquer rota não encontrada retorna a página correspondente
-app.get("/admin*", (req, res) => {
+app.get("/adm*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 app.get("/client*", (req, res) => {
@@ -341,6 +341,6 @@ app.get("*", (req, res) => {
 // ─── Iniciar servidor ────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
-  console.log(`  Admin:  http://localhost:${PORT}/admin`);
+  console.log(`  Admin:  http://localhost:${PORT}/adm`);
   console.log(`  App:    http://localhost:${PORT}/client`);
 });
