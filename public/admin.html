@@ -280,25 +280,36 @@ async function carregarDashboard() {
   const r = await fetch(`${API}/api/dashboard/resumo`);
   const d = await r.json();
   document.getElementById("cards-resumo").innerHTML = `
-    <div class="bg-white rounded-xl p-5 shadow-sm border border-[#C9A227]/30">
-      <p class="text-xs text-gray-500 mb-1">Total de Associados</p>
+    <div onclick="mostrarAba('associados')"
+         class="bg-white rounded-xl p-5 shadow-sm border border-[#C9A227]/30 cursor-pointer hover:shadow-md hover:border-[#C9A227] transition group">
+      <p class="text-xs text-gray-400 mb-1 uppercase tracking-wide">Total de Associados</p>
       <p class="text-3xl font-bold text-[#1B4332]">${d.totalAssociados}</p>
+      <p class="text-xs text-[#C9A227] mt-2 opacity-0 group-hover:opacity-100 transition">Ver lista →</p>
     </div>
-    <div class="bg-white rounded-xl p-5 shadow-sm border">
-      <p class="text-xs text-gray-500 mb-1">Ativos</p>
+    <div onclick="mostrarAba('associados'); setTimeout(()=>{ document.getElementById('filtroStatus').value='Ativo'; carregarAssociados(); },100)"
+         class="bg-white rounded-xl p-5 shadow-sm border cursor-pointer hover:shadow-md hover:border-green-400 transition group">
+      <p class="text-xs text-gray-400 mb-1 uppercase tracking-wide">Ativos</p>
       <p class="text-3xl font-bold text-green-600">${d.totalAtivos}</p>
+      <p class="text-xs text-green-500 mt-2 opacity-0 group-hover:opacity-100 transition">Filtrar →</p>
+    </div>
+    <div onclick="mostrarAba('inadimplentes')"
+         class="bg-white rounded-xl p-5 shadow-sm border cursor-pointer hover:shadow-md hover:border-red-300 transition group">
+      <p class="text-xs text-gray-400 mb-1 uppercase tracking-wide">Inadimplentes</p>
+      <p class="text-3xl font-bold ${d.totalInadimplentes > 0 ? 'text-red-500' : 'text-gray-400'}">${d.totalInadimplentes}</p>
+      <p class="text-xs text-red-400 mt-2 opacity-0 group-hover:opacity-100 transition">Ver lista →</p>
     </div>
     <div class="bg-white rounded-xl p-5 shadow-sm border">
-      <p class="text-xs text-gray-500 mb-1">Inadimplentes</p>
-      <p class="text-3xl font-bold text-red-500">${d.totalInadimplentes}</p>
-    </div>
-    <div class="bg-white rounded-xl p-5 shadow-sm border">
-      <p class="text-xs text-gray-500 mb-1">Dependentes</p>
+      <p class="text-xs text-gray-400 mb-1 uppercase tracking-wide">Dependentes</p>
       <p class="text-3xl font-bold text-gray-700">${d.totalDependentes}</p>
+      <p class="text-xs text-gray-400 mt-2">em ${d.totalAssociados} titulares</p>
     </div>
-    <div class="bg-[#1B4332] rounded-xl p-5 shadow-sm col-span-2">
-      <p class="text-xs text-green-300 mb-1">Receita Mensal Estimada</p>
-      <p class="text-3xl font-bold text-[#C9A227]">${fmt(d.receitaMensalEstimada)}</p>
+    <div class="bg-[#1B4332] rounded-xl p-5 shadow-sm col-span-2 flex items-center justify-between">
+      <div>
+        <p class="text-xs text-green-300 mb-1 uppercase tracking-wide">Receita Mensal Estimada</p>
+        <p class="text-3xl font-bold text-[#C9A227]">${fmt(d.receitaMensalEstimada)}</p>
+        <p class="text-xs text-green-400 mt-1">somente associados ativos</p>
+      </div>
+      <button onclick="carregarDashboard()" title="Atualizar" class="text-green-300 hover:text-[#C9A227] transition text-xl">↻</button>
     </div>
   `;
   document.getElementById("tabela-planos").innerHTML = `
