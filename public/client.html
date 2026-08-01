@@ -3,199 +3,639 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Funerária Jardins — Associado</title>
+  <title>Jardins — Área do Associado</title>
   <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#1B4332" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { theme: { extend: { colors: {
-    floresta: "#1B4332", dourado: "#C9A227"
-  }}}}</script>
+  <meta name="theme-color" content="#0d1f14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f6f0; }
-    .tab-btn.active  { border-bottom: 3px solid #C9A227; color: #1B4332; font-weight: 700; }
-    .tab-btn         { border-bottom: 3px solid transparent; color: #6b7280; }
-    .btn-dourado     { background: #C9A227; color: #1B4332; font-weight: 700; }
-    .btn-dourado:hover { background: #a8841e; }
-    .borda-dourada   { border: 2px solid #C9A227; }
-    .texto-dourado   { color: #C9A227; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde:   #0d1f14;
+      --verde2:  #1B4332;
+      --dourado: #C9A227;
+      --dourado2:#e8c04a;
+      --fundo:   #f7f5f0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--fundo);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── LOGIN ── */
+    #tela-login {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      gap: 32px;
+      background: var(--verde);
+      position: relative;
+      overflow: hidden;
+    }
+    #tela-login::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,162,39,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .login-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-logo img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(201,162,39,0.5);
+      box-shadow: 0 0 40px rgba(201,162,39,0.2);
+    }
+
+    .login-logo h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--dourado);
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+    .login-logo p {
+      font-size: 0.68rem;
+      color: rgba(201,162,39,0.5);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .login-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,162,39,0.2);
+      border-radius: 20px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 360px;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-card label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(201,162,39,0.7);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .login-card input {
+      width: 100%;
+      border: 1.5px solid rgba(201,162,39,0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      text-align: center;
+      font-size: 1.3rem;
+      letter-spacing: 0.2em;
+      font-family: 'Inter', monospace;
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-card input::placeholder { color: rgba(255,255,255,0.25); }
+    .login-card input:focus { border-color: var(--dourado); }
+
+    #login-erro {
+      color: #f87171;
+      font-size: 0.8rem;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .btn-entrar {
+      margin-top: 16px;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--dourado), var(--dourado2), var(--dourado));
+      color: var(--verde);
+      box-shadow: 0 4px 20px rgba(201,162,39,0.3);
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .btn-entrar:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,162,39,0.4); }
+
+    /* ── APP PRINCIPAL ── */
+    #app-principal {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--verde);
+      padding: 16px 20px 14px;
+      position: relative;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(201,162,39,0.4), transparent);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid rgba(201,162,39,0.5);
+      flex-shrink: 0;
+    }
+
+    .header-info { flex: 1; min-width: 0; }
+    .header-info small {
+      display: block;
+      font-size: 0.65rem;
+      color: rgba(201,162,39,0.6);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    #nome-associado {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .badges { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+    #badge-plano {
+      font-size: 0.62rem;
+      padding: 2px 10px;
+      background: var(--dourado);
+      color: var(--verde);
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    #badge-status {
+      font-size: 0.62rem;
+      padding: 2px 10px;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      border-radius: 999px;
+    }
+    .btn-sair {
+      background: none;
+      border: none;
+      color: rgba(201,162,39,0.5);
+      font-size: 0.75rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: color 0.2s;
+    }
+    .btn-sair:hover { color: var(--dourado); }
+
+    /* ── ABAS ── */
+    nav {
+      background: #fff;
+      display: flex;
+      border-bottom: 1px solid #e8e4da;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 14px 0;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #9ca3af;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .tab-btn.active {
+      color: var(--verde2);
+      border-bottom-color: var(--dourado);
+      font-weight: 700;
+    }
+
+    /* ── CONTEÚDO ── */
+    .content { flex: 1; overflow-y: auto; }
+    section { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    section.hidden { display: none; }
+
+    /* Cards */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .card-gold { border: 1.5px solid rgba(201,162,39,0.4); }
+    .card-green { background: var(--verde2); }
+
+    h3.section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--verde2);
+      margin-bottom: 12px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .status-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .status-ok { background: #d1fae5; }
+    .status-late { background: #fee2e2; }
+    .status-ok-text { color: #065f46; font-weight: 700; font-size: 0.9rem; }
+    .status-late-text { color: #991b1b; font-weight: 700; font-size: 0.9rem; }
+
+    .venc-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(201,162,39,0.08);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      border-left: 3px solid var(--dourado);
+    }
+    .venc-box .venc-label { font-size: 0.68rem; color: #6b7280; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+    .venc-box .venc-val  { font-size: 0.9rem; font-weight: 700; color: var(--verde2); margin-top: 1px; }
+
+    .qr-wrap {
+      background: #fafaf8;
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid rgba(201,162,39,0.2);
+    }
+    .qr-wrap p.qr-title { font-size: 0.72rem; font-weight: 700; color: var(--verde2); text-align: center; margin-bottom: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .qr-img { display: flex; justify-content: center; margin-bottom: 14px; }
+    .qr-img img { width: 180px; height: 180px; border-radius: 12px; border: 1px solid #e5e5e5; }
+
+    .chave-pix { text-align: center; margin-bottom: 10px; }
+    .chave-pix small { font-size: 0.67rem; color: #9ca3af; letter-spacing: 0.08em; text-transform: uppercase; }
+    .chave-pix strong { display: block; font-family: 'Inter', monospace; font-size: 0.9rem; color: var(--verde2); margin-top: 3px; }
+
+    .pix-code-box {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.68rem;
+      font-family: monospace;
+      color: #6b7280;
+      word-break: break-all;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .btn-copiar {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--dourado), var(--dourado2), var(--dourado));
+      color: var(--verde);
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .btn-copiar:hover { opacity: 0.9; }
+
+    /* Histórico */
+    .hist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .hist-item:last-child { border: none; }
+    .hist-desc { font-size: 0.85rem; color: #374151; font-weight: 500; }
+    .hist-date { font-size: 0.7rem; color: #9ca3af; margin-top: 2px; }
+    .hist-val { font-size: 0.85rem; font-weight: 700; }
+    .entrada { color: #059669; }
+    .saida   { color: #ef4444; }
+
+    /* Meu Plano */
+    .titular-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .titular-nome { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 700; color: var(--verde2); }
+    .titular-sub  { font-size: 0.68rem; color: #9ca3af; margin-top: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .plano-badge  { display: inline-block; padding: 4px 14px; background: var(--dourado); color: var(--verde); border-radius: 999px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; }
+    .plano-valor  { font-size: 0.7rem; color: #9ca3af; text-align: right; margin-top: 4px; }
+
+    .carencia-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      border-left: 3px solid var(--verde2);
+    }
+    .carencia-label { font-size: 0.67rem; color: #9ca3af; letter-spacing: 0.08em; text-transform: uppercase; }
+    .carencia-val   { font-size: 0.88rem; font-weight: 700; color: var(--verde2); margin-top: 1px; }
+
+    .cob-title { font-size: 0.72rem; font-weight: 700; color: var(--verde2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .cob-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.85rem;
+      color: #374151;
+    }
+    .cob-item:last-child { border: none; }
+    .cob-check { color: var(--dourado); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* Dependentes */
+    .dep-counter {
+      font-size: 0.7rem;
+      padding: 3px 12px;
+      background: rgba(201,162,39,0.12);
+      color: var(--verde2);
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .dep-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .dep-item:last-child { border: none; }
+    .dep-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--verde2);
+      color: var(--dourado);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .dep-nome { font-size: 0.88rem; font-weight: 600; color: #374151; }
+    .dep-info { font-size: 0.72rem; color: #9ca3af; }
+
+    /* Suporte */
+    .suporte-plantao {
+      background: var(--verde2);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .suporte-plantao-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .suporte-icon-wrap {
+      width: 46px;
+      height: 46px;
+      background: var(--dourado);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .suporte-plantao-nome { font-weight: 700; color: #fff; font-size: 0.95rem; }
+    .suporte-plantao-tel  { color: var(--dourado); font-size: 0.85rem; font-weight: 600; margin-top: 2px; }
+    .btn-ligar {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 13px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--dourado), var(--dourado2), var(--dourado));
+      color: var(--verde);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .suporte-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid rgba(201,162,39,0.3);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      transition: border-color 0.2s;
+    }
+    .suporte-link:hover { border-color: var(--dourado); }
+    .suporte-link-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .suporte-link-name  { font-weight: 700; color: var(--verde2); font-size: 0.9rem; }
+    .suporte-link-sub   { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
+    .suporte-link-arrow { margin-left: auto; color: var(--dourado); font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+
+    .horario-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px 20px;
+      border: 1px solid #ede8da;
+    }
+    .horario-title { font-size: 0.72rem; font-weight: 700; color: var(--verde2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .horario-item  { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #6b7280; padding: 4px 0; }
+    .horario-dot   { width: 5px; height: 5px; border-radius: 50%; background: var(--dourado); flex-shrink: 0; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
 
 <!-- ======== TELA DE LOGIN ======== -->
-<div id="tela-login" class="flex-1 flex flex-col items-center justify-center p-6 gap-6 bg-[#1B4332]">
-
-  <!-- Logo -->
-  <div class="flex flex-col items-center gap-3">
-    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="100" height="100">
-      <circle cx="60" cy="60" r="57" fill="#1B4332"/>
-      <circle cx="60" cy="60" r="57" fill="none" stroke="#C9A227" stroke-width="4.5"/>
-      <circle cx="60" cy="60" r="50" fill="none" stroke="#C9A227" stroke-width="1.2" opacity="0.5"/>
-      <polygon points="60,14 34,50 86,50" fill="#C9A227"/>
-      <polygon points="60,30 32,62 88,62" fill="#C9A227"/>
-      <polygon points="60,46 30,74 90,74" fill="#C9A227"/>
-      <rect x="55" y="74" width="10" height="18" fill="#C9A227" rx="2"/>
-    </svg>
-    <div class="text-center">
-      <h1 class="text-2xl font-bold text-[#C9A227] tracking-wide">Funerária Jardins</h1>
-      <p class="text-green-300 text-sm mt-0.5">Área do Associado</p>
+<div id="tela-login">
+  <div class="login-logo">
+    <img src="/logo.jpeg" alt="Jardins Serviços Funerários" />
+    <div>
+      <h1>Jardins</h1>
+      <p>Serviços Funerários · Área do Associado</p>
     </div>
   </div>
 
-  <!-- Card de login -->
-  <div class="w-full max-w-sm bg-white rounded-2xl shadow-xl p-6 space-y-4">
-    <div>
-      <label class="block text-sm font-semibold text-[#1B4332] mb-1">Digite seu CPF</label>
-      <input id="cpf-input" type="text" maxlength="14" placeholder="000.000.000-00"
-             class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-center text-xl tracking-widest font-mono focus:outline-none focus:border-[#C9A227]"
-             oninput="mascararCpf(this)" onkeydown="if(event.key==='Enter') fazerLogin()" />
-    </div>
-    <p id="login-erro" class="text-red-500 text-sm hidden text-center"></p>
-    <button onclick="fazerLogin()" class="btn-dourado w-full py-3 rounded-xl text-base transition">
-      Entrar
-    </button>
+  <div class="login-card">
+    <label for="cpf-input">Seu CPF</label>
+    <input id="cpf-input" type="text" maxlength="14" placeholder="000.000.000-00"
+           oninput="mascararCpf(this)" onkeydown="if(event.key==='Enter') fazerLogin()" />
+    <p id="login-erro"></p>
+    <button class="btn-entrar" onclick="fazerLogin()">Entrar</button>
   </div>
 </div>
 
 <!-- ======== APP PRINCIPAL ======== -->
-<div id="app-principal" class="hidden flex-1 flex flex-col max-w-md mx-auto w-full bg-[#f8f6f0]">
+<div id="app-principal">
 
-  <!-- Cabeçalho -->
-  <header class="bg-[#1B4332] text-white px-5 pt-5 pb-4">
-    <div class="flex items-center gap-3">
-      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="44" height="44" class="flex-shrink-0">
-        <circle cx="60" cy="60" r="57" fill="#1B4332"/>
-        <circle cx="60" cy="60" r="57" fill="none" stroke="#C9A227" stroke-width="5"/>
-        <polygon points="60,16 36,50 84,50" fill="#C9A227"/>
-        <polygon points="60,32 34,62 86,62" fill="#C9A227"/>
-        <polygon points="60,46 32,74 88,74" fill="#C9A227"/>
-        <rect x="55" y="74" width="10" height="16" fill="#C9A227" rx="2"/>
-      </svg>
-      <div class="flex-1 min-w-0">
-        <p class="text-[#C9A227] text-xs font-semibold">Bem-vindo(a)</p>
-        <h2 id="nome-associado" class="font-bold text-base leading-tight truncate"></h2>
-        <div class="flex items-center gap-2 mt-0.5">
-          <span id="badge-plano" class="text-xs px-2 py-0.5 bg-[#C9A227] text-[#1B4332] rounded-full font-bold"></span>
-          <span id="badge-status" class="text-xs px-2 py-0.5 bg-white/20 rounded-full"></span>
+  <header>
+    <div class="header-inner">
+      <img src="/logo.jpeg" alt="Logo" class="header-logo" />
+      <div class="header-info">
+        <small>Bem-vindo(a)</small>
+        <div id="nome-associado"></div>
+        <div class="badges">
+          <span id="badge-plano"></span>
+          <span id="badge-status"></span>
         </div>
       </div>
-      <button onclick="sair()" class="text-green-300 text-xs hover:text-white ml-2 flex-shrink-0">Sair</button>
+      <button class="btn-sair" onclick="sair()">Sair</button>
     </div>
   </header>
 
-  <!-- Abas -->
-  <nav class="bg-white border-b flex shadow-sm">
-    <button class="tab-btn active flex-1 py-3 text-sm" onclick="mostrarAba('financeiro')">💳 Financeiro</button>
-    <button class="tab-btn flex-1 py-3 text-sm" onclick="mostrarAba('plano')">📋 Meu Plano</button>
-    <button class="tab-btn flex-1 py-3 text-sm" onclick="mostrarAba('suporte')">📞 Suporte</button>
+  <nav>
+    <button class="tab-btn active" onclick="mostrarAba('financeiro')">💳 Financeiro</button>
+    <button class="tab-btn" onclick="mostrarAba('plano')">📋 Meu Plano</button>
+    <button class="tab-btn" onclick="mostrarAba('suporte')">📞 Suporte</button>
   </nav>
 
-  <!-- Conteúdo -->
-  <div class="flex-1 overflow-y-auto">
+  <div class="content">
 
     <!-- ── ABA FINANCEIRO ── -->
-    <section id="aba-financeiro" class="p-4 space-y-3">
-
-      <!-- Card status + PIX -->
-      <div id="card-pix" class="bg-white rounded-2xl p-5 shadow-sm borda-dourada"></div>
-
-      <!-- Histórico -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-        <h3 class="font-bold text-[#1B4332] mb-3">Histórico de Pagamentos</h3>
-        <div id="historico-financeiro" class="space-y-2 text-sm text-gray-400">Carregando...</div>
+    <section id="aba-financeiro">
+      <div id="card-pix" class="card card-gold"></div>
+      <div class="card">
+        <h3 class="section-title">Histórico de Pagamentos</h3>
+        <div id="historico-financeiro" style="color:#9ca3af;font-size:0.85rem;">Carregando...</div>
       </div>
-
     </section>
 
     <!-- ── ABA MEU PLANO ── -->
-    <section id="aba-plano" class="hidden p-4 space-y-3">
-      <div id="card-plano-info" class="bg-white rounded-2xl p-5 shadow-sm borda-dourada"></div>
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="font-bold text-[#1B4332]">Dependentes</h3>
-          <span id="contador-dependentes" class="text-xs px-2 py-1 bg-[#C9A227]/20 text-[#1B4332] rounded-full font-semibold"></span>
+    <section id="aba-plano" class="hidden">
+      <div id="card-plano-info" class="card card-gold"></div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <h3 class="section-title" style="margin:0;">Dependentes</h3>
+          <span id="contador-dependentes" class="dep-counter"></span>
         </div>
-        <div id="lista-dependentes" class="space-y-2 text-sm text-gray-400">Carregando...</div>
+        <div id="lista-dependentes" style="color:#9ca3af;font-size:0.85rem;">Carregando...</div>
       </div>
     </section>
 
     <!-- ── ABA SUPORTE ── -->
-    <section id="aba-suporte" class="hidden p-4 space-y-3">
+    <section id="aba-suporte" class="hidden">
 
-      <!-- Plantão 24h -->
-      <div class="bg-[#1B4332] rounded-2xl p-5 shadow-sm">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 bg-[#C9A227] rounded-full flex items-center justify-center text-xl">🚨</div>
+      <div class="suporte-plantao">
+        <div class="suporte-plantao-row">
+          <div class="suporte-icon-wrap">🚨</div>
           <div>
-            <p class="font-bold text-white">Plantão 24 Horas</p>
-            <p class="text-[#C9A227] text-sm font-semibold">(95) 99176-7140</p>
+            <div class="suporte-plantao-nome">Plantão 24 Horas</div>
+            <div class="suporte-plantao-tel">(95) 99176-7140</div>
           </div>
         </div>
-        <a href="tel:+5595991767140"
-           class="btn-dourado block w-full text-center py-3 rounded-xl text-sm font-bold transition">
-          📞 LIGAR AGORA
-        </a>
+        <a href="tel:+5595991767140" class="btn-ligar">📞 Ligar Agora</a>
       </div>
 
-      <!-- WhatsApp -->
-      <a href="https://wa.me/5595991767140?text=Olá,%20preciso%20de%20atendimento"
-         target="_blank"
-         class="flex items-center gap-4 bg-white borda-dourada rounded-2xl p-4 shadow-sm">
-        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl flex-shrink-0">💬</div>
+      <a href="https://wa.me/5595991767140?text=Olá,%20preciso%20de%20atendimento" target="_blank" class="suporte-link">
+        <div class="suporte-link-icon" style="background:#d1fae5;">💬</div>
         <div>
-          <p class="font-bold text-[#1B4332]">WhatsApp</p>
-          <p class="text-sm text-gray-500">(95) 99176-7140</p>
+          <div class="suporte-link-name">WhatsApp</div>
+          <div class="suporte-link-sub">(95) 99176-7140</div>
         </div>
-        <span class="ml-auto text-[#C9A227] font-bold text-sm">Abrir →</span>
+        <span class="suporte-link-arrow">→</span>
       </a>
 
-      <!-- Telefone sede -->
-      <a href="tel:+5595981012775"
-         class="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-        <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-xl flex-shrink-0">📞</div>
+      <a href="tel:+5595981012775" class="suporte-link" style="border-color:#e5e7eb;">
+        <div class="suporte-link-icon" style="background:#f3f4f6;">📞</div>
         <div>
-          <p class="font-bold text-[#1B4332]">Atendimento Sede</p>
-          <p class="text-sm text-gray-500">(95) 98101-2775</p>
+          <div class="suporte-link-name">Atendimento Sede</div>
+          <div class="suporte-link-sub">(95) 98101-2775</div>
         </div>
       </a>
 
-      <!-- Mapa -->
-      <div onclick="abrirMapa()"
-           class="flex items-center gap-4 bg-white borda-dourada rounded-2xl p-4 shadow-sm cursor-pointer">
-        <div class="w-10 h-10 bg-[#C9A227]/20 rounded-full flex items-center justify-center text-xl flex-shrink-0">📍</div>
-        <div class="flex-1">
-          <p class="font-bold text-[#1B4332]">Nossa Sede</p>
-          <p class="text-sm text-gray-500">Av. Mário Homem de Melo, 2116</p>
-          <p class="text-sm text-gray-500">Mecejana — Boa Vista/RR</p>
-          <p class="text-xs text-[#C9A227] mt-1 font-semibold">Toque para abrir no mapa →</p>
+      <div class="suporte-link" onclick="abrirMapa()">
+        <div class="suporte-link-icon" style="background:rgba(201,162,39,0.12);">📍</div>
+        <div>
+          <div class="suporte-link-name">Nossa Sede</div>
+          <div class="suporte-link-sub">Av. Mário Homem de Melo, 2116</div>
+          <div class="suporte-link-sub">Mecejana — Boa Vista/RR</div>
         </div>
+        <span class="suporte-link-arrow">→</span>
       </div>
 
-      <!-- Horários -->
-      <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm text-sm text-gray-600 space-y-1">
-        <p class="font-bold text-[#1B4332] mb-2">Horário de Atendimento</p>
-        <p>🕐 Seg–Sex: 08h às 18h</p>
-        <p>🕐 Sábados: 08h às 12h</p>
-        <p>🚨 Emergências: 24 horas — (95) 99176-7140</p>
-      </div>
-
-      <!-- Farmácias parceiras -->
-      <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-        <p class="font-bold text-[#1B4332] mb-3 text-sm">Farmácias Parceiras</p>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="border rounded-xl p-3 text-center">
-            <img src="/parceiros/pague-menos.png" alt="Pague Menos" class="w-full h-12 object-contain"
-                 onerror="this.parentNode.innerHTML='<p class=&quot;text-xs text-gray-500 py-2&quot;>Pague Menos</p>'" />
-          </div>
-          <div class="border rounded-xl p-3 text-center">
-            <img src="/parceiros/farmacia-popular.png" alt="Farmácia Popular" class="w-full h-12 object-contain"
-                 onerror="this.parentNode.innerHTML='<p class=&quot;text-xs text-gray-500 py-2&quot;>Farm. Popular</p>'" />
-          </div>
-          <div class="border rounded-xl p-3 text-center">
-            <img src="/parceiros/santo-remedio.png" alt="Santo Remédio" class="w-full h-12 object-contain"
-                 onerror="this.parentNode.innerHTML='<p class=&quot;text-xs text-gray-500 py-2&quot;>Santo Remédio</p>'" />
-          </div>
-        </div>
+      <div class="horario-card">
+        <div class="horario-title">Horário de Atendimento</div>
+        <div class="horario-item"><span class="horario-dot"></span>Segunda a Sexta: 08h às 18h</div>
+        <div class="horario-item"><span class="horario-dot"></span>Sábados: 08h às 12h</div>
+        <div class="horario-item"><span class="horario-dot"></span>Emergências: 24 horas — (95) 99176-7140</div>
       </div>
 
     </section>
@@ -204,7 +644,6 @@
 </div>
 
 <script>
-// ─── Estado ──────────────────────────────────────────────────
 const API = "";
 let associado = null;
 
@@ -212,9 +651,9 @@ let associado = null;
 function mascararCpf(input) {
   let v = input.value.replace(/\D/g,"");
   if (v.length > 11) v = v.slice(0,11);
-  v = v.replace(/(\d{3})(\d)/, "$1.$2")
-       .replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
-       .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+  v = v.replace(/(\d{3})(\d)/,"$1.$2")
+       .replace(/(\d{3})\.(\d{3})(\d)/,"$1.$2.$3")
+       .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/,"$1.$2.$3-$4");
   input.value = v;
 }
 
@@ -222,6 +661,8 @@ function limparCpf(cpf) { return cpf.replace(/\D/g,""); }
 
 async function fazerLogin() {
   const cpf = limparCpf(document.getElementById("cpf-input").value);
+  const erro = document.getElementById("login-erro");
+  erro.style.display = "none";
   if (cpf.length !== 11) { mostrarErroLogin("Digite um CPF válido."); return; }
   try {
     const r = await fetch(`${API}/api/cliente/${cpf}`);
@@ -229,29 +670,27 @@ async function fazerLogin() {
     associado = await r.json();
     localStorage.setItem("assoc", JSON.stringify(associado));
     iniciarApp();
-  } catch {
-    mostrarErroLogin("Erro de conexão. Tente novamente.");
-  }
+  } catch { mostrarErroLogin("Erro de conexão. Tente novamente."); }
 }
 
 function mostrarErroLogin(msg) {
   const el = document.getElementById("login-erro");
   el.textContent = msg;
-  el.classList.remove("hidden");
+  el.style.display = "block";
 }
 
 function sair() {
   localStorage.removeItem("assoc");
   associado = null;
-  document.getElementById("app-principal").classList.add("hidden");
-  document.getElementById("tela-login").classList.remove("hidden");
+  document.getElementById("app-principal").style.display = "none";
+  document.getElementById("tela-login").style.display = "flex";
   document.getElementById("cpf-input").value = "";
-  document.getElementById("login-erro").classList.add("hidden");
+  document.getElementById("login-erro").style.display = "none";
 }
 
 function iniciarApp() {
-  document.getElementById("tela-login").classList.add("hidden");
-  document.getElementById("app-principal").classList.remove("hidden");
+  document.getElementById("tela-login").style.display = "none";
+  document.getElementById("app-principal").style.display = "flex";
   document.getElementById("nome-associado").textContent = associado.nome;
   document.getElementById("badge-plano").textContent    = associado.plano;
   document.getElementById("badge-status").textContent   = associado.status;
@@ -260,30 +699,28 @@ function iniciarApp() {
 
 // ─── Abas ────────────────────────────────────────────────────
 function mostrarAba(nome) {
-  ["financeiro","plano","suporte"].forEach(a => document.getElementById(`aba-${a}`).classList.add("hidden"));
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.getElementById(`aba-${nome}`).classList.remove("hidden");
-  const idx = ["financeiro","plano","suporte"].indexOf(nome);
-  document.querySelectorAll(".tab-btn")[idx].classList.add("active");
+  ["financeiro","plano","suporte"].forEach(a => {
+    const s = document.getElementById(`aba-${a}`);
+    s.classList.toggle("hidden", a !== nome);
+  });
+  document.querySelectorAll(".tab-btn").forEach((b,i) => {
+    b.classList.toggle("active", ["financeiro","plano","suporte"][i] === nome);
+  });
   if (nome === "financeiro") renderizarFinanceiro();
   if (nome === "plano")      renderizarPlano();
 }
 
-// ─── Gerador de código PIX ────────────────────────────────────
+// ─── PIX ─────────────────────────────────────────────────────
 function gerarPix(plano) {
   const valores = { BRONZE: "30.00", PRATA: "40.00", OURO: "50.00", DIAMANTE: "100.00" };
   const valor   = valores[plano] || "30.00";
-  const cnpj    = "66585418000116";
-  const nome    = "FUNERARIA JARDINS LTDA";
-  const cidade  = "BOA VISTA";
-  const txid    = "MENSALIDADE" + Date.now();
-
-  function pad(tag, val) {
-    const v = String(val);
-    return tag + String(v.length).padStart(2,"0") + v;
-  }
-  const gui     = "BR.GOV.BCB.PIX";
-  const info    = pad("01", cnpj) + pad("02", "Mensalidade Funeraria");
+  const cnpj = "66585418000116";
+  const nome = "FUNERARIA JARDINS LTDA";
+  const cidade = "BOA VISTA";
+  const txid = "MENSALIDADE" + Date.now();
+  function pad(tag, val) { const v = String(val); return tag + String(v.length).padStart(2,"0") + v; }
+  const gui = "BR.GOV.BCB.PIX";
+  const info = pad("01", cnpj) + pad("02", "Mensalidade Funeraria");
   const merchant = pad("00", gui) + pad("26", info);
   const payload = "000201" + pad("26", merchant) + "52040000" + "5303986" +
                   pad("54", valor) + "5802BR" + pad("59", nome) + pad("60", cidade) +
@@ -293,11 +730,10 @@ function gerarPix(plano) {
   return payload + s.toString(16).toUpperCase().padStart(4,"0");
 }
 
-// ─── Calcula próximo vencimento ───────────────────────────────
 function proximoVencimento() {
   const criado = associado.criado_em ? new Date(associado.criado_em) : new Date();
-  const dia    = criado.getDate();
-  const hoje   = new Date();
+  const dia = criado.getDate();
+  const hoje = new Date();
   let prox = new Date(hoje.getFullYear(), hoje.getMonth(), dia);
   if (prox <= hoje) prox = new Date(hoje.getFullYear(), hoje.getMonth() + 1, dia);
   return { dia, data: prox.toLocaleDateString("pt-BR") };
@@ -305,88 +741,107 @@ function proximoVencimento() {
 
 // ─── ABA FINANCEIRO ───────────────────────────────────────────
 async function renderizarFinanceiro() {
-  const estaEmDia = associado.status === "Ativo";
+  const ok = associado.status === "Ativo";
   const valorPorPlano = { BRONZE: 30, PRATA: 40, OURO: 50, DIAMANTE: 100 };
-  const valor  = valorPorPlano[associado.plano] || 30;
-  const pix    = gerarPix(associado.plano);
-  const qrUrl  = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pix)}&margin=10&bgcolor=ffffff&color=1B4332`;
+  const valor = valorPorPlano[associado.plano] || 30;
+  const pix   = gerarPix(associado.plano);
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pix)}&margin=10&bgcolor=ffffff&color=1B4332`;
   const { dia, data: dataVenc } = proximoVencimento();
 
-  const statusHtml = estaEmDia
-    ? `<div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center font-bold text-green-700">✓</div>
-         <div>
-           <p class="font-bold text-green-700">Pagamento em dia</p>
-           <p class="text-xs text-gray-400">Plano ${associado.plano} — R$ ${valor},00/mês</p>
-         </div>
-       </div>`
-    : `<div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center font-bold text-red-700">⚠</div>
-         <div>
-           <p class="font-bold text-red-700">Mensalidade em atraso</p>
-           <p class="text-xs text-gray-400">Entre em contato para regularizar</p>
-         </div>
-       </div>`;
-
   document.getElementById("card-pix").innerHTML = `
-    ${statusHtml}
-    <!-- Próximo vencimento -->
-    <div class="flex items-center gap-2 mb-4 bg-[#C9A227]/10 rounded-xl px-4 py-2">
-      <span class="text-lg">📅</span>
+    <div class="status-row">
+      <div class="status-icon ${ok ? "status-ok" : "status-late"}">${ok ? "✓" : "⚠"}</div>
       <div>
-        <p class="text-xs text-gray-500 font-medium">Próximo Vencimento</p>
-        <p class="font-bold text-[#1B4332]">Dia ${dia} de cada mês &nbsp;·&nbsp; ${dataVenc}</p>
+        <div class="${ok ? "status-ok-text" : "status-late-text"}">${ok ? "Pagamento em dia" : "Mensalidade em atraso"}</div>
+        <div style="font-size:0.75rem;color:#9ca3af;margin-top:2px;">${ok ? `Plano ${associado.plano} · R$ ${valor},00/mês` : "Entre em contato para regularizar"}</div>
       </div>
     </div>
-    <!-- QR Code + PIX -->
-    <div class="bg-gray-50 rounded-xl p-4 border border-[#C9A227]/30">
-      <p class="text-xs font-bold text-[#1B4332] mb-3 text-center">QR Code PIX — R$ ${valor},00</p>
-      <div class="flex justify-center mb-3">
-        <img src="${qrUrl}" alt="QR Code PIX" class="w-44 h-44 rounded-xl border border-gray-200" />
+    <div class="venc-box">
+      <span style="font-size:1.1rem;">📅</span>
+      <div>
+        <div class="venc-label">Próximo Vencimento</div>
+        <div class="venc-val">Dia ${dia} &nbsp;·&nbsp; ${dataVenc}</div>
       </div>
-      <div class="text-center mb-2">
-        <p class="text-xs text-gray-500 font-medium">Chave PIX (CNPJ)</p>
-        <p class="font-mono font-bold text-[#1B4332] text-sm">66.585.418/0001-16</p>
+    </div>
+    <div class="qr-wrap">
+      <p class="qr-title">QR Code PIX — R$ ${valor},00</p>
+      <div class="qr-img"><img src="${qrUrl}" alt="QR Code PIX" /></div>
+      <div class="chave-pix">
+        <small>Chave PIX (CNPJ)</small>
+        <strong>66.585.418/0001-16</strong>
       </div>
-      <p class="text-xs text-gray-400 mb-2 font-medium">Código Copia e Cola:</p>
-      <p class="text-xs font-mono break-all text-gray-600 bg-white border rounded p-2 select-all" id="pix-code">${pix}</p>
-      <button onclick="copiarPix()" class="btn-dourado mt-3 w-full text-center text-sm py-2.5 rounded-lg transition">
-        📋 Copiar Código PIX
-      </button>
+      <div class="pix-code-box" id="pix-code">${pix}</div>
+      <button class="btn-copiar" onclick="copiarPix()">📋 Copiar Código PIX</button>
     </div>
   `;
 
-  // Histórico
   try {
-    const r    = await fetch(`${API}/api/associados/${associado.id}/financeiro`);
+    const r   = await fetch(`${API}/api/associados/${associado.id}/financeiro`);
     const fins = await r.json();
-    const fmt  = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v);
-    const el   = document.getElementById("historico-financeiro");
-    if (!fins.length) { el.innerHTML = `<p class="text-center py-4 text-gray-400">Nenhum lançamento registrado.</p>`; return; }
+    const fmt = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v);
+    const el  = document.getElementById("historico-financeiro");
+    if (!fins.length) { el.innerHTML = `<p style="text-align:center;padding:16px 0;color:#9ca3af;">Nenhum lançamento registrado.</p>`; return; }
     el.innerHTML = fins.slice(0,10).map(f => `
-      <div class="flex justify-between items-center py-2 border-b last:border-0">
+      <div class="hist-item">
         <div>
-          <p class="font-medium text-gray-700">${f.descricao}</p>
-          <p class="text-xs text-gray-400">${new Date(f.data).toLocaleDateString("pt-BR")}</p>
+          <div class="hist-desc">${f.descricao}</div>
+          <div class="hist-date">${new Date(f.data).toLocaleDateString("pt-BR")}</div>
         </div>
-        <span class="font-bold text-sm ${f.tipo==='entrada'?'text-green-600':'text-red-500'}">
-          ${f.tipo==='entrada'?'+':'-'}${fmt(f.valor)}
-        </span>
+        <span class="hist-val ${f.tipo==="entrada"?"entrada":"saida"}">${f.tipo==="entrada"?"+":"-"}${fmt(f.valor)}</span>
       </div>`).join("");
-  } catch { document.getElementById("historico-financeiro").innerHTML = `<p class="text-center py-2 text-gray-400">Sem histórico disponível.</p>`; }
+  } catch { document.getElementById("historico-financeiro").innerHTML = `<p style="text-align:center;color:#9ca3af;padding:12px 0;">Sem histórico disponível.</p>`; }
 }
 
 function copiarPix() {
   const txt = document.getElementById("pix-code")?.textContent || "";
-  navigator.clipboard.writeText(txt).then(() => alert("Código PIX copiado!"));
+  navigator.clipboard.writeText(txt).then(() => alert("Código PIX copiado!")).catch(() => alert("Não foi possível copiar. Selecione o código manualmente."));
 }
 
 // ─── ABA MEU PLANO ───────────────────────────────────────────
 const DADOS_PLANO = {
-  BRONZE:   { val: 30,  carencia: "90 dias", coberturas: ["Urna padrão","Translado local","Preparação","Velório em nossa sede","Sepultamento"] },
-  PRATA:    { val: 40,  carencia: "60 dias", coberturas: ["Urna premium","Translado estadual","Preparação completa","Velório 24h","Sepultamento","Flores e coroa"] },
-  OURO:     { val: 50,  carencia: "30 dias", coberturas: ["Urna de luxo","Translado nacional","Preparação VIP","Velório em casa ou sede","Sepultamento ou cremação","Flores, coroa e missa"] },
-  DIAMANTE: { val: 100, carencia: "Sem carência", coberturas: ["Urna premium especial","Translado internacional","Preparação VIP + tanatopraxia","Velório em qualquer local","Sepultamento ou cremação","Flores, coroa, missa e café"] },
+  BRONZE: {
+    val: 30, carencia: "90 dias",
+    coberturas: [
+      "Urna OX com visor",
+      "Higienização",
+      "Carros fúnebres",
+      "Velório",
+      "Café, água e biscoitos"
+    ]
+  },
+  PRATA: {
+    val: 40, carencia: "90 dias",
+    coberturas: [
+      "Urna OOX com visor",
+      "Higienização",
+      "Carros fúnebres",
+      "Velório",
+      "Café, água e biscoitos"
+    ]
+  },
+  OURO: {
+    val: 50, carencia: "90 dias",
+    coberturas: [
+      "Urna com visor e varão",
+      "Higienização",
+      "Ornamentação artificial",
+      "Carros fúnebres",
+      "Velório",
+      "Café, água e biscoitos"
+    ]
+  },
+  DIAMANTE: {
+    val: 100, carencia: "180 dias",
+    coberturas: [
+      "Urna exclusiva com visor e varão",
+      "Higienização",
+      "Ornamentação",
+      "Carros fúnebres",
+      "Velório",
+      "Café",
+      "Tanatopraxia"
+    ]
+  }
 };
 
 function renderizarPlano() {
@@ -394,48 +849,44 @@ function renderizarPlano() {
   const fmt = v => new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v);
 
   document.getElementById("card-plano-info").innerHTML = `
-    <div class="flex items-center justify-between mb-4">
+    <div class="titular-row">
       <div>
-        <p class="text-xs text-gray-400 mb-0.5 font-medium">Titular</p>
-        <h3 class="font-bold text-lg text-[#1B4332]">${associado.nome}</h3>
+        <div class="titular-sub">Titular</div>
+        <div class="titular-nome">${associado.nome}</div>
       </div>
-      <div class="text-right">
-        <span class="inline-block px-3 py-1 bg-[#C9A227] text-[#1B4332] rounded-full text-sm font-bold">${associado.plano}</span>
-        <p class="text-xs text-gray-400 mt-1">${fmt(p.val)}/mês</p>
+      <div style="text-align:right;">
+        <span class="plano-badge">${associado.plano}</span>
+        <div class="plano-valor">${fmt(p.val)}/mês</div>
       </div>
     </div>
-    <div class="flex items-center gap-2 bg-gray-50 rounded-xl px-4 py-2 mb-4">
-      <span class="text-base">⏳</span>
+    <div class="carencia-box">
+      <span style="font-size:1.1rem;">⏳</span>
       <div>
-        <p class="text-xs text-gray-500 font-medium">Prazo de Carência</p>
-        <p class="font-bold text-[#1B4332] text-sm">${p.carencia}</p>
+        <div class="carencia-label">Prazo de Carência</div>
+        <div class="carencia-val">${p.carencia}</div>
       </div>
     </div>
-    <h4 class="text-sm font-bold text-[#1B4332] mb-2">Coberturas incluídas:</h4>
-    <ul class="space-y-1.5">
-      ${p.coberturas.map(c => `
-        <li class="flex items-start gap-2 text-sm text-gray-700">
-          <span class="text-[#C9A227] font-bold mt-0.5 flex-shrink-0">✓</span> ${c}
-        </li>`).join("")}
-    </ul>
+    <div class="cob-title">Coberturas incluídas</div>
+    ${p.coberturas.map(c => `
+      <div class="cob-item">
+        <span class="cob-check">✓</span>
+        <span>${c}</span>
+      </div>`).join("")}
   `;
 
-  const deps = associado.dependentes || [];
+  const deps  = associado.dependentes || [];
   const vagas = 6 - deps.length;
-  document.getElementById("contador-dependentes").textContent = `${deps.length}/6 — ${vagas} vaga${vagas !== 1 ? "s" : ""} disponível${vagas !== 1 ? "is" : ""}`;
+  document.getElementById("contador-dependentes").textContent =
+    `${deps.length}/6 · ${vagas} vaga${vagas !== 1 ? "s" : ""}`;
+
   const el = document.getElementById("lista-dependentes");
-  if (!deps.length) {
-    el.innerHTML = `<p class="text-center py-4 text-gray-400">Nenhum dependente cadastrado.</p>`;
-    return;
-  }
+  if (!deps.length) { el.innerHTML = `<p style="text-align:center;padding:16px 0;color:#9ca3af;">Nenhum dependente cadastrado.</p>`; return; }
   el.innerHTML = deps.map(d => `
-    <div class="flex items-center gap-3 py-2 border-b last:border-0">
-      <div class="w-9 h-9 bg-[#1B4332] rounded-full flex items-center justify-center text-[#C9A227] font-bold text-sm flex-shrink-0">
-        ${d.nome[0].toUpperCase()}
-      </div>
+    <div class="dep-item">
+      <div class="dep-avatar">${d.nome[0].toUpperCase()}</div>
       <div>
-        <p class="font-semibold text-gray-700">${d.nome}</p>
-        <p class="text-xs text-gray-400">${d.parentesco} · ${d.idade} anos</p>
+        <div class="dep-nome">${d.nome}</div>
+        <div class="dep-info">${d.parentesco} · ${d.idade} anos</div>
       </div>
     </div>`).join("");
 }
@@ -446,13 +897,11 @@ function abrirMapa() {
   window.open(`https://www.google.com/maps/search/?api=1&query=${q}`, "_blank");
 }
 
-// ─── Inicialização ─────────────────────────────────────────────
+// ─── Init ─────────────────────────────────────────────────────
 const saved = localStorage.getItem("assoc");
 if (saved) {
-  try {
-    associado = JSON.parse(saved);
-    iniciarApp();
-  } catch { localStorage.removeItem("assoc"); }
+  try { associado = JSON.parse(saved); iniciarApp(); }
+  catch { localStorage.removeItem("assoc"); }
 }
 </script>
 </body>
