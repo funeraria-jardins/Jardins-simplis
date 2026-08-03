@@ -12,6 +12,49 @@ const db      = require("./db");
 const app  = express();
 const PORT = process.env.PORT || 5000;
 
+// ─── Cria as tabelas automaticamente se não existirem ─────────
+// Garante que o banco (Replit, Railway, ou qualquer outro) esteja
+// sempre inicializado sem precisar rodar schema.sql manualmente.
+async function inicializarBanco() {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS associados (
+        id            SERIAL PRIMARY KEY,
+        nome          TEXT NOT NULL,
+        cpf           TEXT NOT NULL UNIQUE,
+        status        TEXT NOT NULL DEFAULT 'Ativo',
+        plano         TEXT NOT NULL DEFAULT 'BRONZE',
+        telefone      TEXT,
+        email         TEXT,
+        endereco      TEXT,
+        criado_em     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        atualizado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS dependentes (
+        id            SERIAL PRIMARY KEY,
+        associado_id  INTEGER NOT NULL REFERENCES associados(id) ON DELETE CASCADE,
+        nome          TEXT NOT NULL,
+        parentesco    TEXT NOT NULL,
+        idade         INTEGER NOT NULL,
+        peso          REAL,
+        criado_em     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS lancamentos_financeiros (
+        id            SERIAL PRIMARY KEY,
+        associado_id  INTEGER NOT NULL REFERENCES associados(id) ON DELETE CASCADE,
+        descricao     TEXT NOT NULL,
+        valor         REAL NOT NULL,
+        tipo          TEXT NOT NULL,
+        data          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        observacao    TEXT
+      );
+    `);
+    console.log("Tabelas verificadas/criadas com sucesso.");
+  } catch (err) {
+    console.error("Erro ao inicializar banco:", err.message);
+  }
+}
+
 // ─── Middlewares ─────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
@@ -339,8 +382,10 @@ app.get("*", (req, res) => {
 });
 
 // ─── Iniciar servidor ────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-  console.log(`  Admin:  http://localhost:${PORT}/adm`);
-  console.log(`  App:    http://localhost:${PORT}/client`);
+inicializarBanco().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`  Admin:  http://localhost:${PORT}/adm`);
+    console.log(`  App:    http://localhost:${PORT}/client`);
+  });
 });
