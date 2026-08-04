@@ -2,7 +2,7 @@
 // Funerária Jardins — Servidor Principal
 // Node.js + Express (JavaScript puro, sem TypeScript)
 // ============================================================
-require("dotenv").config();
+//require("dotenv").config();
 
 const express = require("express");
 const cors    = require("cors");
